@@ -116,11 +116,16 @@ class Worksheet():
         feed = self._getFeed()
         self._resize(feed, rows, cols)
 
-    def asDataFrame(self):
+    def asDataFrame(self, set_index=True, set_columns=True, values=False):
         """Returns a DataFrame representation of the sheet
 
-        Currently the index/column names are the row/column numbers.
-        Blank rows/columns are not included
+        The index/column names are the row/column numbers, unless set_index or
+        set_columns is set respectively
+
+        Setting values=True returns the values of the cell, reather than a
+        formula.
+
+        Currently all values are returned as a string.
         """
         cell_feed_uri = (
             _get_first(self._element.findall(_ns_w3('link')), 'rel',
@@ -135,12 +140,31 @@ class Worksheet():
         df = pd.DataFrame()
         for cell in cell_feed.findall(_ns_w3('entry')):
             gs = cell.find(_ns_sheet('cell'))
-            content = gs.get('inputValue')
-            column = gs.get('col')
-            row = gs.get('row')
+            if values:
+                content = list(gs.itertext())[0]
+            else:
+                content = gs.get('inputValue')
+            column = int(gs.get('col'))
+            row = int(gs.get('row'))
 
             df.loc[row, column] = content
-        df = df.fillna("").sort_index(axis=1).sort_index()
+
+        # fill in blanks and order
+        if len(df):
+            df = df.reindex(columns=list(range(1, max(df.columns)+1)))
+            df = df.reindex(list(range(1, max(df.index)+1)))
+
+            if set_columns:
+                df.columns = df.iloc[0]
+                df = df.drop(1)
+            if set_index and len(df):
+                df.index = df[df.columns[0]]
+                del df[df.columns[0]]
+                if not set_columns:
+                    df.index.name = ""
+
+            # we use the index name, not the columns name
+            df.columns.name = ""
 
         return df
 
@@ -169,6 +193,10 @@ class Worksheet():
         Note:
             A Google Spreadsheet may not (as of July 2015) have more than
             2,000,000 cells.
+
+            The name of the columns is never copied.
+            The name of the index is copied if both copy_index=True and
+            copy_columns=True
         """
         # x_pos, y_post is the position of the data, excluding any columns
         y, x = df.shape
