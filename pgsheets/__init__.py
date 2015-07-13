@@ -8,3 +8,5 @@ The Client and Token objects are used for authentication with Google's API
 
 from pgsheets.token import Client, Token
 from pgsheets.models import Spreadsheet
+
+__version__ = '0.0.1'
