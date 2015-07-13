@@ -204,8 +204,8 @@ class Worksheet():
         if copy_columns and copy_index:
             update((y_pos-1, x_pos-1, str_repr(df.index.name)))
 
-        for i, row in df.iterrows():
-            for j, v in enumerate(row.values):
+        for i, row in enumerate(df.values):
+            for j, v in enumerate(row):
                 update((i+y_pos, j+x_pos, str_repr(v)))
 
         self._addCells(updates)
