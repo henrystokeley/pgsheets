@@ -305,6 +305,12 @@ class _BaseSpreadsheet():
     def getTitle(self):
         return self._element.find(_ns_w3('title')).text
 
+    def getURL(self):
+        return (_get_first(self._element.findall(_ns_w3('link')),
+                           'rel',
+                           'alternate')
+                .get('href'))
+
     def getWorksheets(self):
         """Returns a list of Worksheet objects representing the worksheets of
         this Spreadsheet
