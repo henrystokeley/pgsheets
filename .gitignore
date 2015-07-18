@@ -1,4 +1,9 @@
 *.swp
 *.txt
 __pycache__
+.coverage
+build
+dist
+
+# environments
 .env
