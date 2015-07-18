@@ -36,7 +36,9 @@ Getting a Token
 ----------------------------
 
 Using your Google *client id* and *client secret* we can get a
-authorization URL to present to a user::
+authorization URL to present to a user:
+
+.. code-block:: python
 
     >>> from pgsheets.token import Token, Client
     >>> c = Client(my_client_id, my_client_secret)
@@ -45,7 +47,9 @@ authorization URL to present to a user::
 
 By visiting this URL a Google user can consent to your application
 viewing and modifying their Google sheets. After consenting to this
-an access code is returned, which we use to get a token::
+an access code is returned, which we use to get a token:
+
+.. code-block:: python
 
     >>> my_token = c.getRefreshToken(access_code)
     >>> type(my_token)
@@ -62,7 +66,9 @@ which will look something like this:
 
     https://docs.google.com/spreadsheets/d/..../edit#gid=0
 
-Now we can access the Spreadsheet::
+Now we can access the Spreadsheet:
+
+.. code-block:: python
 
     >>> import pandas as pd
     >>> from pgsheets import Spreadsheet
@@ -112,7 +118,9 @@ Currently the following cannot be done with pgsheets:
 - Prevent certain values from changing slightly e.g. 'True' becomes 'TRUE'
 
 Finally the Google API has some limitations.
-Idally this code should not cause any changes to a worksheet::
+Ideally this code should not cause any changes to a worksheet:
+
+.. code-block:: python
 
     >>> w.setDataFrame(w.asDataFrame())
 
