@@ -78,7 +78,7 @@ Now we can access the Spreadsheet:
     >>> s.getTitle()
     'test'
     >>> s.getWorksheets()
-    [<Worksheet title='Sheet1' id='.....'>]
+    [<Worksheet title='Sheet1' sheet_key='.....'>]
     >>> w = s.getWorksheet('Sheet1')
     >>> w.getTitle()
     'Sheet1'
