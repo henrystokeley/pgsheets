@@ -24,6 +24,7 @@ if __name__ == '__main__':
           version=version,
           packages=find_packages(exclude=['test', 'test.*']),
           author="Henry Stokeley",
+          author_email="henrystokeley@gmail.com",
           description=("A Python package for manipulating Google Sheets as "
                        "Pandas DataFrame objects"
                        ),
