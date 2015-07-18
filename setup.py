@@ -9,7 +9,9 @@ if __name__ == '__main__':
         requirements = f.read()
         requirements = [
             r for r in requirements.splitlines() if r != '']
-
+    # get readme
+    with open('README.rst') as f:
+        readme = f.read()
     # get version number
     with open('pgsheets/__init__.py') as f:
         version = f.read()
@@ -25,6 +27,7 @@ if __name__ == '__main__':
           description=("A Python package for manipulating Google Sheets as "
                        "Pandas DataFrame objects"
                        ),
+          long_description=readme,
           license="MIT",
           url="https://github.com/henrystokeley/pgsheets",
           install_requires=requirements,
