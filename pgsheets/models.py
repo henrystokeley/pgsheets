@@ -84,7 +84,7 @@ class Worksheet():
         # title may have changed so use the latest information
         return self._getTitle(self._getFeed())
 
-    def _getId(self):
+    def _getSheetKey(self):
         return self._element.find(_ns_w3('id')).text.split('/')[-4]
 
     def resizeToAtLeast(self, rows=None, cols=None):
@@ -289,10 +289,10 @@ class Worksheet():
         _check_status(r)
 
     def __repr__(self):
-        return "<{cls} title={title!r} id={id_!r}>".format(
+        return "<{cls} title={title!r} sheet_key={id_!r}>".format(
             cls=self.__class__.__name__,
             title=self._getTitle(self._element),
-            id_=self._getId())
+            id_=self._getSheetKey())
 
 
 class _BaseSpreadsheet():
