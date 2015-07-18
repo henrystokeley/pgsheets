@@ -2,7 +2,7 @@ pgsheets : Python Interaction for Google Sheets
 ===============================================
 
 pgsheets is a Python3 library for interacting with Google Sheets.
-It makes use of `Pandas <http://pandas.pydata.org/>` DataFrames,
+It makes use of `Pandas <http://pandas.pydata.org/>`__ DataFrames,
 2-dimensional structures perfectly
 suited for data analysis and representing a spreadsheet.
 
@@ -25,7 +25,7 @@ Setting up a Google Project
 
 If you haven't already you will need to create a project in Google's Developer Console and get your Client ID and Client Secret.
 
-#. Navigate to the `Google Developer Console <https://console.developers.google.com/project>`
+#. Navigate to the `Google Developer Console <https://console.developers.google.com/project>`__
 #. Click on *Enable API* and create a project name.
 #. Click on *APIs & Auth*
 #. Click on *Consent screen* and set a Product Name
