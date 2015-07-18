@@ -25,9 +25,7 @@ if __name__ == '__main__':
           packages=find_packages(exclude=['test', 'test.*']),
           author="Henry Stokeley",
           author_email="henrystokeley@gmail.com",
-          description=("A Python package for manipulating Google Sheets as "
-                       "Pandas DataFrame objects"
-                       ),
+          description=("Manipulate Google Sheets Using Pandas DataFrames"),
           long_description=readme,
           license="MIT",
           url="https://github.com/henrystokeley/pgsheets",

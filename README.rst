@@ -1,5 +1,5 @@
-pgsheets : Python Interaction for Google Sheets
-===============================================
+pgsheets : Manipulate Google Sheets Using Python
+================================================
 
 pgsheets is a Python3 library for interacting with Google Sheets.
 It makes use of `Pandas <http://pandas.pydata.org/>`__ DataFrames,
@@ -15,7 +15,16 @@ Features
 - Manage authorization with Google API
 - Retrieve/set formulas or values
 - Resize spreadsheets
-- Open up a wealth of Panda data tools to use on Google Sheets
+- Open up a wealth of Pandas data tools to use on Google Sheets
+
+Installation
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Simply install with pip:
+
+.. code-block:: bash
+
+    $ pip install pgsheets
 
 Usage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -26,10 +35,10 @@ Setting up a Google Project
 If you haven't already you will need to create a project in Google's Developer Console and get your Client ID and Client Secret.
 
 #. Navigate to the `Google Developer Console <https://console.developers.google.com/project>`__
-#. Click on *Enable API* and create a project name.
+#. Create a project (you will be redirected to the project page)
 #. Click on *APIs & Auth*
 #. Click on *Consent screen* and set a Product Name
-#. Go to *APIs & Auth* tab and click on *credentials*.
+#. Now click on *credentials*.
 #. Click *Create new Client ID* and select *Installed Application* > *Other*
 
 Getting a Token
@@ -61,11 +70,7 @@ You need to save *my_token* for future use.
 Editing a spreadsheet
 -------------------------------------------
 
-Create a spreadsheet (and make sure you save it). Then copy the url
-which will look something like this:
-
-    https://docs.google.com/spreadsheets/d/..../edit#gid=0
-
+Create a spreadsheet (and make sure you save it) and copy the url.
 Now we can access the Spreadsheet:
 
 .. code-block:: python
@@ -131,7 +136,7 @@ For example, with a Formula such as the following
 ={1, 2}
 =======    =======
 
-which displays as:
+which displays across two cells:
 
 =======    =======
   1         2
