@@ -49,7 +49,7 @@ authorization URL to present to a user:
 
 .. code-block:: python
 
-    >>> from pgsheets.token import Token, Client
+    >>> from pgsheets import Token, Client
     >>> c = Client(my_client_id, my_client_secret)
     >>> c.getOauthUrl()
     'https://accounts.google.com/o/oauth2/auth?...'
