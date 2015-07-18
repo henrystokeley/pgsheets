@@ -1,5 +1,7 @@
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element, SubElement
+import urllib
+import re
 
 import requests
 import pandas as pd
@@ -349,11 +351,21 @@ class Spreadsheet(_BaseSpreadsheet):
     def __init__(self, token, key, **kwargs):
         """Initialize a Spreadsheet
 
-        The 'key' is the part of your spreadsheet url shown below:
+        The key is either the URL of your spreadsheet or the *key*
+        part as shown below:
         https://docs.google.com/spreadsheets/d/{{key}}/edit
 
         Initialization involves calling the Google API.
         """
+        # did we get a URL?
+        m = re.match(r'^(?:https?://)?(?:www\.)?'
+                     'docs\.google\.com/spreadsheets/d/([^/]*)',
+                     key
+                     )
+        if m:
+            key = m.group(1)
+
+        key = urllib.parse.quote(key)
         url = ('https://spreadsheets.google.com/feeds/spreadsheets'
                '/private/full/{}'.format(key))
         r = requests.get(url, headers=token.getAuthorizationHeader())
