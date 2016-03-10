@@ -15,6 +15,7 @@ Features
 - Manage authorization with Google API
 - Retrieve/set formulas or values
 - Resize spreadsheets
+- Add worksheets to and remove worksheets from a spreadsheet
 - Open up a wealth of Pandas data tools to use on Google Sheets
 
 Installation
