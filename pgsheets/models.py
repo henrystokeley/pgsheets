@@ -340,12 +340,45 @@ class _BaseSpreadsheet():
                 return w
         raise ValueError('unavailable sheet {}'.format(title))
 
+    def addWorksheet(self, title, rows=1, cols=1):
+        """Adds a new worksheet to a spreadsheet.
+        :param title: A title of a new worksheet.
+        :param rows: Number of rows.
+        :param cols: Number of columns.
+        Returns a newly created :class:`worksheets <Worksheet>`.
+        """
+        entry = Element('entry', {
+                'xmlns': 'http://www.w3.org/2005/Atom',
+                'xmlns:gs': 'http://schemas.google.com/spreadsheets/2006',
+                })
+
+        SubElement(entry, 'title').text = title
+        SubElement(entry, 'gs:rowCount').text = str(rows)
+        SubElement(entry, 'gs:colCount').text = str(cols)
+
+        key = self.getKey()
+        url = ('https://spreadsheets.google.com/feeds/worksheets/{}'
+                   '/private/full'.format(urllib.parse.quote(key)))
+        r = requests.post(
+            url, 
+            data=ElementTree.tostring(entry), 
+            headers=self._token.getAuthorizationHeader({'Content-Type': 'application/atom+xml'})
+            )
+        _check_status(r)
+        element = ElementTree.fromstring(r.content.decode())
+        worksheet = Worksheet(self._token, element)
+        return worksheet
+
+    def removeWorksheet(self, worksheet):
+        url = _get_first(worksheet._element.findall(_ns_w3('link')), 'rel', 'edit').get('href')
+        r = requests.delete(url, headers=self._token.getAuthorizationHeader())
+        _check_status(r)
+
     def __repr__(self):
         return "<{cls} title={title!r} key={key!r}>".format(
             cls=self.__class__.__name__,
             title=self.getTitle(),
             key=self.getKey())
-
 
 class Spreadsheet(_BaseSpreadsheet):
     def __init__(self, token, key, **kwargs):
