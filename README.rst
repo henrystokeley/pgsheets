@@ -15,6 +15,7 @@ Features
 - Manage authorization with Google API
 - Retrieve/set formulas or values
 - Resize spreadsheets
+- Add worksheets to and remove worksheets from a spreadsheet
 - Open up a wealth of Pandas data tools to use on Google Sheets
 
 Installation
@@ -109,6 +110,31 @@ Now we can access the Spreadsheet:
         money                                                               
         1000     0.015     3  =R[0]C[-3] * (1+R[0]C[-2]) ^ R[0]C[-1]    TRUE
 
+Adding or Removing Worksheets
+--------------------------
+
+Add a worksheet with `addWorksheet()`, and remove a Worksheet object
+with `removeWorksheet()`:
+
+.. code-block:: python
+
+    >>> import pandas as pd
+    >>> from pgsheets import Spreadsheet
+    >>> s = Spreadsheet(t, my_url)
+    >>> s
+    <Spreadsheet title='test' key='.....'>
+    >>> s.getWorksheets()
+    [<Worksheet title='Sheet1' sheet_key='.....'>]
+    >>> w = s.addWorksheet('My Title')
+    <Worksheet title='My Title' sheet_key='.....'>
+    >>> w.getTitle()
+    'My Title'
+    >>> s.getWorksheets()
+    [<Worksheet title='Sheet1' sheet_key='.....'>, <Worksheet title='My Title' sheet_key='.....'>]
+    >>> s.removeWorksheet(w)
+    >>> s.getWorksheets()
+    [<Worksheet title='Sheet1' sheet_key='.....'>]
+
 Limitations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -118,8 +144,7 @@ It will almost certainly not work in Python2.
 Currently the following cannot be done with pgsheets:
 
 - Create a spreadsheet
-- Add a workbook to a spreadsheet
-- Rename a spreadsheet or a workbook
+- Rename a spreadsheet or a worksheet
 - Prevent certain values from changing slightly e.g. 'True' becomes 'TRUE'
 
 Finally the Google API has some limitations.

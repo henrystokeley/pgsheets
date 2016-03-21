@@ -1,9 +1,11 @@
+*.pyc
 *.swp
 *.txt
 __pycache__
 .coverage
 build
 dist
+/pgsheets.egg-info
 
 # environments
 .env

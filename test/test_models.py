@@ -6,7 +6,7 @@ from pgsheets.models import Worksheet
 from pgsheets.exceptions import PGSheetsHTTPException
 
 from test.api_content import get_spreadsheet_element, \
-    get_worksheets_feed
+    get_worksheets_feed, get_worksheet_entry
 
 
 class MockToken():
@@ -33,10 +33,13 @@ class ApiTest(TestCase):
         self.get = self.get_patch.start()
         self.post_patch = patch("requests.post")
         self.post = self.post_patch.start()
+        self.delete_patch = patch("requests.delete")
+        self.delete = self.delete_patch.start()
 
         self.token = MockToken()
 
     def tearDown(self):
+        self.delete_patch.stop()
         self.post_patch.stop()
         self.get_patch.stop()
 
@@ -57,6 +60,36 @@ class ApiTest(TestCase):
                          "Bearer " + self.token.token)
         self.get.called = False
 
+    def checkPostCall(self, url=None):
+        """Test that a Post request was made with appropriate
+        authorization headers.
+
+        Optionally can check the url. Resets the called attribute
+        """
+        self.assertTrue(self.post.called)
+        pos, kwargs = self.post.call_args
+        assert len(pos) >= 1
+        if url is not None:
+            self.assertEqual(pos[0], url)
+        self.assertIn('headers', kwargs)
+        self.assertIn('Authorization', kwargs['headers'])
+        self.assertEqual(kwargs['headers']['Authorization'],
+                         "Bearer " + self.token.token)
+        self.post.called = False
+
+    def checkDeleteCall(self, url=None):
+        """Test that a Post request was made with appropriate
+        authorization headers.
+
+        Optionally can check the url. Resets the called attribute
+        """
+        self.assertTrue(self.delete.called)
+        pos, kwargs = self.delete.call_args
+        assert len(pos) >= 1
+        if url is not None:
+            self.assertEqual(pos[0], url)
+        self.assertIn('headers', kwargs)
+        self.assertIn('Authorization', kwargs['headers'])
 
 class TestSpreadSheet(ApiTest):
 
@@ -124,6 +157,50 @@ class TestSpreadSheet(ApiTest):
         self.assertEqual(s.getURL(),
                          "https://docs.google.com/spreadsheets/d/{}/edit"
                          .format("TESTKEY"))
+
+    def test_addRemoveWorksheets(self):
+        key = "TESTKEY"
+        s = self.getSpreadsheet(key, "my_title")
+
+        # get spreadsheets
+        self.get.return_value.status_code = 200
+        self.get.return_value.content = get_worksheets_feed(
+            key=key, sheet_names=["sheet_title"])
+        w = s.getWorksheets()
+        self.checkGetCall(
+            "https://spreadsheets.google.com/feeds/worksheets/{}/private/full"
+            .format(key))
+
+        self.assertEqual(type(w), list)
+        self.assertEqual(len(w), 1)
+        self.assertEqual(type(w[0]), Worksheet)
+        w = w[0]
+
+        self.post.return_value.status_code = 201
+        self.post.return_value.content = get_worksheet_entry(
+            key, "added_sheet_title")
+        w = s.addWorksheet("added_sheet_title")
+        self.checkPostCall(
+            "https://spreadsheets.google.com/feeds/worksheets/{}/private/full"
+            .format(key))
+
+        self.assertEqual(type(w), Worksheet)
+
+        self.get.return_value.status_code = 200
+        self.get.return_value.content = get_worksheet_entry(
+            key, "added_sheet_title")
+        title = w.getTitle()
+        self.checkGetCall(
+            "https://spreadsheets.google.com/feeds/worksheets/{}/private/full/od6"
+            .format(key))
+        self.assertEqual(title, "added_sheet_title")
+
+        self.delete.return_value.status_code = 200
+        self.delete.return_value.content = b''
+        s.removeWorksheet(w)
+        self.checkDeleteCall(
+            "https://spreadsheets.google.com/feeds/worksheets/{}/private/full/od6/CCCC"
+            .format(key))
 
     def test_getWorksheets(self):
         key = "TESTKEY"
