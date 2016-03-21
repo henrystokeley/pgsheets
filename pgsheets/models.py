@@ -360,9 +360,10 @@ class _BaseSpreadsheet():
         url = ('https://spreadsheets.google.com/feeds/worksheets/{}'
                    '/private/full'.format(urllib.parse.quote(key)))
         r = requests.post(
-            url, 
-            data=ElementTree.tostring(entry), 
-            headers=self._token.getAuthorizationHeader({'Content-Type': 'application/atom+xml'})
+            url,
+            data=ElementTree.tostring(entry),
+            headers=self._token.getAuthorizationHeader(
+                {'Content-Type': 'application/atom+xml'})
             )
         _check_status(r)
         element = ElementTree.fromstring(r.content.decode())
@@ -370,7 +371,10 @@ class _BaseSpreadsheet():
         return worksheet
 
     def removeWorksheet(self, worksheet):
-        url = _get_first(worksheet._element.findall(_ns_w3('link')), 'rel', 'edit').get('href')
+        url = _get_first(
+            worksheet._element.findall(_ns_w3('link')),
+            'rel',
+            'edit').get('href')
         r = requests.delete(url, headers=self._token.getAuthorizationHeader())
         _check_status(r)
 
